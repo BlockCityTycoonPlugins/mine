@@ -1,0 +1,31 @@
+enable: true
+hide-players: true
+stone-spawn-speed: 5    #seconds
+durability-of-blocks:
+  default: 0
+  stone: 5
+  coal_ore: 10
+  coal_block: 15
+  iron_ore: 20
+  iron_block: 25
+  gold_ore: 30
+  gold_block: 35
+  diamond_ore: 40
+  diamond_block: 45
+  emerald_ore: 50
+  emerald_block: 55
+  lapis_block: 100
+value-of-blocks:
+  default: 0
+  stone: 10
+  coal_ore: 40
+  coal_block: 80
+  iron_ore: 150
+  iron_block: 300
+  gold_ore: 1000
+  gold_block: 1600
+  diamond_ore: 5000
+  diamond_block: 10000
+  emerald_ore: 18000
+  emerald_block: 40000
+  lapis_block: 100000

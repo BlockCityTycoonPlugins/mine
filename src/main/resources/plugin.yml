@@ -1,0 +1,12 @@
+name: BlockCityTycoonMine
+version: '${project.version}'
+main: me.darkmun.blockcitytycoonmine.BlockCityTycoonMine
+authors: [ Darkmun ]
+depend: [ProtocolLib, PacketWrapper, Vault]
+commands:
+  break:
+    description: asd
+  setchunk:
+    description: dfgsg
+  stonespawnchance:
+    description: Upgrades stone spawn chance to specified level
