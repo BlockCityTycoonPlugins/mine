@@ -38,20 +38,9 @@ public class JoinListener implements Listener {
             }, 5);
         }
 
-        //BlockCityTycoonMine.getEntityHider().showNPCSFromCitizens(pl);
-        //for (int entityID = Integer.MAX_VALUE; entityID >= (Integer.MAX_VALUE - 90); entityID--) {
-        //    BlockCityTycoonMine.getEntityHider().showEntityByID(pl, entityID);
-        //}
-        if (BlockCityTycoonMine.getPlugin().getConfig().getBoolean("hide-players")) {
-            for (LivingEntity livingEntity : pl.getWorld().getLivingEntities()) {
-                if (livingEntity instanceof Player) {
-                    Player player = (Player) livingEntity;
-                    player.hidePlayer(pl);
-                    pl.hidePlayer(player);
-                }
-                if (livingEntity instanceof ArmorStand) {
-                    BlockCityTycoonMine.getEntityHider().hideEntity(pl, livingEntity);
-                }
+        for (LivingEntity livingEntity : pl.getWorld().getLivingEntities()) {
+            if (livingEntity instanceof ArmorStand) {
+                BlockCityTycoonMine.getEntityHider().hideEntity(pl, livingEntity);
             }
         }
     }

@@ -80,8 +80,7 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
             hookToVault();
             getServer().getPluginManager().registerEvents(new BreakingStoneListener(), this);
             getServer().getPluginManager().registerEvents(new JoinListener(), this);
-            getCommand("break").setExecutor(this);
-            getCommand("setchunk").setExecutor(this);
+
             getCommand("stonespawnchance").setExecutor(new StoneSpawnChanceCommand());
 
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
