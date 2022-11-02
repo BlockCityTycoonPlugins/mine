@@ -5,4 +5,8 @@ authors: [ Darkmun ]
 depend: [ProtocolLib, PacketWrapper, Vault]
 commands:
   stonespawnchance:
-    description: Upgrades stone spawn chance to specified level
+    description: Изменяет шанс спавна камней
+  updatepickaxe:
+    description: Меняет кирку или добавляет некоторые энчанты
+    aliases:
+      - up

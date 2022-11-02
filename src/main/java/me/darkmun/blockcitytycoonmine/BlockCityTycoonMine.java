@@ -1,9 +1,6 @@
 package me.darkmun.blockcitytycoonmine;
 
 import com.comphenix.example.EntityHider;
-import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
-import com.comphenix.packetwrapper.WrapperPlayServerCustomSoundEffect;
-import com.comphenix.packetwrapper.WrapperPlayServerMapChunk;
 import com.comphenix.packetwrapper.WrapperPlayServerNamedSoundEffect;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -11,7 +8,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.darkmun.blockcitytycoonmine.commands.StoneSpawnChanceCommand;
-import me.darkmun.blockcitytycoonmine.durability.DurabilityBlock;
+import me.darkmun.blockcitytycoonmine.commands.UpdatePickaxeCommand;
 import me.darkmun.blockcitytycoonmine.listeners.BreakingStoneListener;
 import me.darkmun.blockcitytycoonmine.listeners.JoinListener;
 import net.milkbowl.vault.chat.Chat;
@@ -82,6 +79,7 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
             getServer().getPluginManager().registerEvents(new JoinListener(), this);
 
             getCommand("stonespawnchance").setExecutor(new StoneSpawnChanceCommand());
+            getCommand("updatepickaxe").setExecutor(new UpdatePickaxeCommand());
 
             ProtocolManager manager = ProtocolLibrary.getProtocolManager();
             BreakingStoneListener.listenToStoneChange(manager);
