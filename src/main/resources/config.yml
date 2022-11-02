@@ -1,5 +1,5 @@
 enable: true
-hide-players: true
+value-display-disappear-time: 4   #время через которое исчезает отображение ценности блока после его ломания
 stone-spawn-speed: 5    #seconds
 durability-of-blocks:
   default: 0

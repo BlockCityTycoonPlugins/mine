@@ -4,7 +4,6 @@ import me.darkmun.blockcitytycoonmine.durability.DurabilityBlock;
 import net.minecraft.server.v1_12_R1.Chunk;
 import net.minecraft.server.v1_12_R1.ChunkSection;
 import net.minecraft.server.v1_12_R1.World;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
@@ -67,7 +66,6 @@ public class ChunkAndBlockWorker {
                 for (int k = 4; k >= 0; k--) {
                     Block block = pl.getWorld().getBlockAt(i, j, k);
                     DurabilityBlock durBlock = new DurabilityBlock(block, Material.STONE, entID);
-                    //durBlock.hideValueForPlayer(pl);
                     blocks.add(durBlock);
                     entID--;
                 }
@@ -76,6 +74,7 @@ public class ChunkAndBlockWorker {
         playersDurabilityBlocks.put(pl.getUniqueId(), blocks);
     }
 
+    @SuppressWarnings("deprecation")
     private static void addDurabilityBlocksToPlayerChunk(Player pl) {
         for (int i = -95; i <= -90; i++) {
             for (int j = 36; j <= 38; j++) {
@@ -90,7 +89,6 @@ public class ChunkAndBlockWorker {
                     int x = getXInChunk(i);
                     int y = getYInChunk(j);
                     int z = getZInChunk(k);
-                    Bukkit.getLogger().info("x: " + x + " y: " + y + " z: " + z);
                     playersChunk.get(pl.getUniqueId()).getSections()[2].setType(x,y,z, net.minecraft.server.v1_12_R1.Block.getById(id).getBlockData());
                 }
             }
@@ -113,7 +111,6 @@ public class ChunkAndBlockWorker {
             }
         }
     }
-
     public static int getXInChunk(int x) {
         if (x < 0) {
             return 16 + x % 16;
@@ -121,11 +118,9 @@ public class ChunkAndBlockWorker {
             return x % 16;
         }
     }
-
     public static int getYInChunk(int y) {
         return y % 16;
     }
-
     public static int getZInChunk(int z) {
         if (z < 0) {
             return 16 + z % 16;

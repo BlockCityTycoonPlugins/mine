@@ -1,6 +1,5 @@
 package me.darkmun.blockcitytycoonmine;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ public class Hologram {
                 BlockCityTycoonMine.getEntityHider().hideEntity(pl, armorStand);
             }
         }
-        //BlockCityTycoonMine.getEntityHider().showEntity(player, armorStand);
         return armorStand;
     }
 }
