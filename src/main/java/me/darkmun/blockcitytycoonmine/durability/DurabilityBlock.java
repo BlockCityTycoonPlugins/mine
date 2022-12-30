@@ -26,7 +26,7 @@ public class DurabilityBlock {
     private int distractionLevel = 0;
     private final int entityID;
     public int taskID;
-    private int value;
+    private double value;
     private double durabilityToNextDistractionLevel;
     private boolean broken = false;
     private boolean sending = false;
@@ -153,11 +153,19 @@ public class DurabilityBlock {
         }
     }
 
+    public void giveToPlayer(Player player) {
+        player.getInventory().addItem(new ItemStack(fakeMaterial, 1));
+    }
+
     private void setValueFromMaterial(Material material) {
         if (BlockCityTycoonMine.getPlugin().getConfig().contains("value-of-blocks." + material.toString().toLowerCase())) {
-            value = BlockCityTycoonMine.getPlugin().getConfig().getInt("value-of-blocks." + material.toString().toLowerCase());
+            value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks." + material.toString().toLowerCase());
         }
-        else value = BlockCityTycoonMine.getPlugin().getConfig().getInt("value-of-blocks.default");
+        else value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks.default");
+    }
+
+    public void updateValue() {  // надо бы пользоваться этим методом лучше
+        value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks." + fakeMaterial.toString().toLowerCase());
     }
 
     private void setMaxDurabilityFromMaterial(Material material) {
@@ -167,12 +175,16 @@ public class DurabilityBlock {
         else maxDurability = BlockCityTycoonMine.getPlugin().getConfig().getInt("durability-of-blocks.default");
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
     public int getDistractionLevel() {
         return distractionLevel;
+    }
+
+    public int getID() {
+        return entityID;
     }
 
     public Block getBlock() {

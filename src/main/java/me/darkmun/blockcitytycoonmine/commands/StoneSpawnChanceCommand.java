@@ -18,6 +18,7 @@ public class StoneSpawnChanceCommand implements CommandExecutor {
                 Player pl = Bukkit.getPlayerExact(args[0]);
                 if (pl != null) {
                     FileConfiguration config = BlockCityTycoonMine.getPlugin().getPlayersUpgradesConfig().getConfig();
+                    config.set(pl.getUniqueId().toString() + ".name", args[0]);
                     config.set(pl.getUniqueId().toString() + ".stone-spawn-chance", "level-" + args[1]);
                     BlockCityTycoonMine.getPlugin().getPlayersUpgradesConfig().saveConfig();
                     return true;

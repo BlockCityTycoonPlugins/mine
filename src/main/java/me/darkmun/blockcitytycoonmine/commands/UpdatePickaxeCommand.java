@@ -26,10 +26,10 @@ public class UpdatePickaxeCommand implements CommandExecutor {
                         if (args[1].startsWith("ef")) {
                             try {
                                 int efficiencyLevel = Integer.parseInt(args[1].substring(2));
-                                if (efficiencyLevel <= 5 && efficiencyLevel >= 1) {
+                                if (efficiencyLevel <= 5 && efficiencyLevel >= 0) {
                                     item.addEnchantment(Enchantment.DIG_SPEED, efficiencyLevel);
                                 } else {
-                                    sender.sendMessage(ChatColor.RED + "Уровень энчанта должен быть >=1 и <=5");
+                                    sender.sendMessage(ChatColor.RED + "Уровень энчанта должен быть >=0 и <=5");
                                 }
                             }
                             catch (NumberFormatException ex) {
