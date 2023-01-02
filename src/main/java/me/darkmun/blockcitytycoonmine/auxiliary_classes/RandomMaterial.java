@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 
 public class RandomMaterial {
     public static Material getForPlayer(Player pl) {
-        FileConfiguration upConfig = BlockCityTycoonMine.getPlugin().getUpgradesConfig().getConfig();
-        FileConfiguration plUpConfig = BlockCityTycoonMine.getPlugin().getPlayersUpgradesConfig().getConfig();
+        FileConfiguration upConfig = BlockCityTycoonMine.getUpgradesConfig().getConfig();
+        FileConfiguration plUpConfig = BlockCityTycoonMine.getPlayersUpgradesConfig().getConfig();
         if (plUpConfig.contains(pl.getUniqueId().toString() + ".stone-spawn-chance")) {
             String[] strings = upConfig.getConfigurationSection("stone-spawn-chance." + plUpConfig.getString(pl.getUniqueId().toString() + ".stone-spawn-chance")).getKeys(false).toArray(new String[0]);
             int[] chances = new int[strings.length];

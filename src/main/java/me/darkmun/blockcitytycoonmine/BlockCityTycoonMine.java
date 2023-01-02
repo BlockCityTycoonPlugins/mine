@@ -1,6 +1,5 @@
 package me.darkmun.blockcitytycoonmine;
 
-import com.comphenix.example.EntityHider;
 import com.comphenix.packetwrapper.WrapperPlayServerNamedSoundEffect;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -14,6 +13,7 @@ import me.darkmun.blockcitytycoonmine.durability.DurabilityBlock;
 import me.darkmun.blockcitytycoonmine.listeners.BreakingStoneListener;
 import me.darkmun.blockcitytycoonmine.listeners.JoinListener;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -31,20 +31,18 @@ import java.util.UUID;
 
 public final class BlockCityTycoonMine extends JavaPlugin implements CommandExecutor, Listener {
     private static BlockCityTycoonMine plugin;
-    private static Plugin BCTEvents = Bukkit.getServer().getPluginManager().getPlugin("BlockCityTycoonEvents");
-    private Config upgradesConfig = new Config();
-    private Config playersUpgradesConfig = new Config();
-    //private Config playersBlockValuesConfig = new Config();
-    private static Config playerEventsDataConfig = new Config();
+    private static final Plugin BCTEvents = Bukkit.getServer().getPluginManager().getPlugin("BlockCityTycoonEvents");
+    private static final Config upgradesConfig = new Config();
+    private static final Config playersUpgradesConfig = new Config();
+    private static final Config playerEventsDataConfig = new Config();
 
-    private static Database database = new Database();
-    private static Economy econ = null;
-    private static EntityHider entityHider;
+    private static final Database database = new Database();
+    public static Economy econ = null;
+    public static Permission permission = null;
     @Override
     public void onEnable() {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        entityHider = new EntityHider(this, EntityHider.Policy.BLACKLIST);
 
         upgradesConfig.setup(getDataFolder(), "upgrades");
 
@@ -91,7 +89,7 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
     }
 
     private void hookToVault() {
-        if (!setupEconomy() ) {
+        if (!setupEconomy() || !setupPermissions()) {
             getPlugin().getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
         }
@@ -107,6 +105,14 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
         }
         econ = rsp.getProvider();
         return econ != null;
+    }
+
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
     }
 
     @Override
@@ -145,10 +151,10 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
     public static BlockCityTycoonMine getPlugin() {
         return plugin;
     }
-    public Config getUpgradesConfig() {
+    public static Config getUpgradesConfig() {
         return upgradesConfig;
     }
-    public Config getPlayersUpgradesConfig() {
+    public static Config getPlayersUpgradesConfig() {
         return playersUpgradesConfig;
     }
     /*public Config getPlayersBlockValuesConfig() {
@@ -167,8 +173,5 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
 
     public static Economy getEconomy() {
         return econ;
-    }
-    public static EntityHider getEntityHider() {
-        return entityHider;
     }
 }

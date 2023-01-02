@@ -14,13 +14,13 @@ public class StoneSpawnChanceCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender.hasPermission("bctmine.stonespawnchance")) {
-            if (args.length == 2 && BlockCityTycoonMine.getPlugin().getUpgradesConfig().getConfig().contains("stone-spawn-chance.level-" + args[1])) {
+            if (args.length == 2 && BlockCityTycoonMine.getUpgradesConfig().getConfig().contains("stone-spawn-chance.level-" + args[1])) {
                 Player pl = Bukkit.getPlayerExact(args[0]);
                 if (pl != null) {
-                    FileConfiguration config = BlockCityTycoonMine.getPlugin().getPlayersUpgradesConfig().getConfig();
+                    FileConfiguration config = BlockCityTycoonMine.getPlayersUpgradesConfig().getConfig();
                     config.set(pl.getUniqueId().toString() + ".name", args[0]);
                     config.set(pl.getUniqueId().toString() + ".stone-spawn-chance", "level-" + args[1]);
-                    BlockCityTycoonMine.getPlugin().getPlayersUpgradesConfig().saveConfig();
+                    BlockCityTycoonMine.getPlayersUpgradesConfig().saveConfig();
                     return true;
                 } else {
                     sender.sendMessage(ChatColor.RED + "Игрока с ником " + args[0] + " сейчас нет на сервере");

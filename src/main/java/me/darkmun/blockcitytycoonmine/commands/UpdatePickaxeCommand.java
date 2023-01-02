@@ -66,9 +66,8 @@ public class UpdatePickaxeCommand implements CommandExecutor {
     }
 
     private ItemStack getPickaxeFromInventory(PlayerInventory inventory) {
-        return Arrays.stream(inventory.getContents()).filter(itemStack -> {
-            return Arrays.asList(pickaxes).contains(itemStack.getType());
-        }).findFirst().orElse(null);
+        return Arrays.stream(inventory.getContents()).filter(itemStack ->
+                Arrays.asList(pickaxes).contains(itemStack.getType())).findFirst().orElse(null);
     }
 
     private String secondArgumentError() {

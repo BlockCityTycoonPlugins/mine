@@ -11,7 +11,6 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nonnull;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -94,7 +93,7 @@ public class ChunkAndBlockWorker {
                     int finalI = i;
                     int finalJ = j;
                     int finalK = k;
-                    @Nonnull DurabilityBlock durabilityBlock = Objects.requireNonNull(playersDurabilityBlocks.get(pl.getUniqueId()).stream().filter(durBlock ->
+                    DurabilityBlock durabilityBlock = Objects.requireNonNull(playersDurabilityBlocks.get(pl.getUniqueId()).stream().filter(durBlock ->
                             durBlock.getBlock().getX() == finalI && durBlock.getBlock().getY() == finalJ && durBlock.getBlock().getZ() == finalK).findAny().orElse(null));
                     int id = durabilityBlock.getMaterial().getId();
 
@@ -114,7 +113,7 @@ public class ChunkAndBlockWorker {
                     int finalI = i;
                     int finalJ = j;
                     int finalK = k;
-                    @Nonnull DurabilityBlock durabilityBlock = Objects.requireNonNull(playersDurabilityBlocks.get(player.getUniqueId()).stream().filter(durBlock ->
+                    DurabilityBlock durabilityBlock = Objects.requireNonNull(playersDurabilityBlocks.get(player.getUniqueId()).stream().filter(durBlock ->
                             durBlock.getBlock().getX() == finalI && durBlock.getBlock().getY() == finalJ && durBlock.getBlock().getZ() == finalK).findAny().orElse(null));
                     if (durabilityBlock.getDistractionLevel() != 0) {
                         durabilityBlock.sendBreakAnim(player);

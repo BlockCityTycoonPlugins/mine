@@ -63,8 +63,8 @@ public class DurabilityBlock {
     public void reduceDurabilityWith(ItemStack item) {
         int itemID = item.getTypeId();
         int efficiencyLevel = item.getEnchantmentLevel(Enchantment.DIG_SPEED);
-        if (BlockCityTycoonMine.getPlugin().getUpgradesConfig().getConfig().contains("pickaxe." + itemID + ".ef-" + efficiencyLevel)) {
-            reduceDurabilityBy(BlockCityTycoonMine.getPlugin().getUpgradesConfig().getConfig().getDouble("pickaxe." + itemID + ".ef-" + efficiencyLevel));
+        if (BlockCityTycoonMine.getUpgradesConfig().getConfig().contains("pickaxe." + itemID + ".ef-" + efficiencyLevel)) {
+            reduceDurabilityBy(BlockCityTycoonMine.getUpgradesConfig().getConfig().getDouble("pickaxe." + itemID + ".ef-" + efficiencyLevel));
         }
     }
 
@@ -164,6 +164,7 @@ public class DurabilityBlock {
         else value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks.default");
     }
 
+    @SuppressWarnings("unused")
     public void updateValue() {  // надо бы пользоваться этим методом лучше
         value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks." + fakeMaterial.toString().toLowerCase());
     }

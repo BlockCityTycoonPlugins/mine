@@ -73,7 +73,7 @@ public class Database {
     }
 
     public void updateDurabilityBlocks(UUID plUUID, List<DurabilityBlock> durabilityBlocks) throws SQLException {
-        PreparedStatement statement = getConnection().prepareStatement("UPDATE mine_data SET material = ? WHERE UUID = ?, blockId = ?");
+        PreparedStatement statement = getConnection().prepareStatement("UPDATE mine_data SET material = ? WHERE UUID = ? AND blockId = ?");
         for (DurabilityBlock block : durabilityBlocks) {
             statement.setString(1, block.getMaterial().toString());
             statement.setString(2, plUUID.toString());

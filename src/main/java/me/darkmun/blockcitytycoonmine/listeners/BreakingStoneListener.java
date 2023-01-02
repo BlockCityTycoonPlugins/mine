@@ -4,7 +4,6 @@ import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerMapChunk;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.darkmun.blockcitytycoonmine.BlockCityTycoonMine;
@@ -18,13 +17,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
@@ -54,15 +50,32 @@ public class BreakingStoneListener implements Listener {
                     && (z >= STONE_MINE_LOW_Z && z <= STONE_MINE_HIGH_Z))) {
                 DurabilityBlock durabilityBlock = ChunkAndBlockWorker.getDurabilityBlocks(plUUID).stream()
                         .filter(durBlock -> durBlock.getBlock().equals(block)).findAny().orElse(null);
+                assert durabilityBlock != null;
+
+                boolean inventoryFilled = true;
+                for (ItemStack itemStack : pl.getInventory().getStorageContents()) {
+                    if (itemStack == null) {
+                        inventoryFilled = false;
+                        break;
+                    }
+                }
+
+                if (inventoryFilled) {
+                    pl.sendMessage(ChatColor.GOLD + "Ваш инвентарь переполнен! Продайте блоки из шахты или слитки/гемы");
+                    break;
+                }
 
                 if (!durabilityBlock.isBroken()) {
                     ItemStack itemInMainHand = pl.getInventory().getItemInMainHand();
                     durabilityBlock.reduceDurabilityWith(itemInMainHand);
                     if (durabilityBlock.isBroken()) {
                         if (itemInMainHand.getEnchantmentLevel(Enchantment.SILK_TOUCH) == 1) { //если есть шелковое касание, то блок выпадает
-                            Material itemInMainHandType = itemInMainHand.getType();
-                            if (itemInMainHandType != Material.STONE && itemInMainHandType != Material.COAL_ORE && itemInMainHandType != Material.COAL_BLOCK) {
+                            Material durabilityBlockMaterial = durabilityBlock.getMaterial();
+                            if (durabilityBlockMaterial != Material.STONE && durabilityBlockMaterial != Material.COAL_ORE && durabilityBlockMaterial != Material.COAL_BLOCK) {
                                 durabilityBlock.giveToPlayer(pl);
+                                if (!pl.hasPermission("deluxemenus." + durabilityBlockMaterial + "_32")) {
+                                    BlockCityTycoonMine.permission.playerAdd(null, pl, "deluxemenus." + durabilityBlockMaterial + "_32");
+                                }
                             }
                         }
 
@@ -70,15 +83,10 @@ public class BreakingStoneListener implements Listener {
                         durabilityBlock.sendBreak(pl);
 
 
-                        /*double newValue = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks." + durabilityBlock.getMaterial().toString().toLowerCase());
-                        if (durabilityBlock.getValue() != newValue) {
-                            durabilityBlock.updateValue();
-                        }*/
                         BlockCityTycoonMine.getPlayerEventsDataConfig().reloadConfig();
                         int multiplier = 1;
                         if (BlockCityTycoonMine.getPlayerEventsDataConfig().getConfig().getBoolean(pl.getUniqueId().toString() + ".gold-rush-event.running")
                                 && BlockCityTycoonMine.getBCTEventsPlugin().getConfig().getBoolean("gold-rush-event.enable")) {
-                            Bukkit.getLogger().info("Меняем мултиплайер");
                             multiplier = BlockCityTycoonMine.getBCTEventsPlugin().getConfig().getInt("gold-rush-event.multiplier");
                         }
                         double newValue = durabilityBlock.getValue() * multiplier;
@@ -86,8 +94,9 @@ public class BreakingStoneListener implements Listener {
                         BlockCityTycoonMine.getEconomy().depositPlayer(pl, newValue);
 
                         Location location = new Location(block.getWorld(),block.getX() + 0.5, block.getY() - 1.70, block.getZ() + 0.5);
-                        ArmorStand hologram = Hologram.createAndShowToPlayer(location, String.format("§c§l+%s$§r", df.format(newValue)), pl);
-                        Bukkit.getScheduler().runTaskLater(BlockCityTycoonMine.getPlugin(), hologram::remove, BlockCityTycoonMine.getPlugin().getConfig().getLong("value-display-disappear-time") * 20);
+                        Hologram.showToPlayer(location, String.format("§c§l+%s$§r", df.format(newValue)), pl, durabilityBlock.getID());
+                        Bukkit.getScheduler().runTaskLater(BlockCityTycoonMine.getPlugin(), () ->
+                                Hologram.removeToPlayer(pl, durabilityBlock.getID()), BlockCityTycoonMine.getPlugin().getConfig().getLong("value-display-disappear-time") * 20);
                     }
                     else if (durabilityBlock.isNeededToSendBreakAnim()){
                         durabilityBlock.sendHitSound(pl);
@@ -135,7 +144,7 @@ public class BreakingStoneListener implements Listener {
         manager.addPacketListener(new PacketAdapter(BlockCityTycoonMine.getPlugin(), PacketType.Play.Server.MAP_CHUNK) {
 
             @Override
-            public void onPacketSending(PacketEvent event) {
+            public void onPacketSending(PacketEvent event) {  // потом подумать как оптимизировать
                 WrapperPlayServerMapChunk wrapper = new WrapperPlayServerMapChunk(event.getPacket());
                 Player pl = event.getPlayer();
 

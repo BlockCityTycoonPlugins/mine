@@ -10,12 +10,13 @@ public class Config {
     private File file;
     private FileConfiguration config;
 
+    @SuppressWarnings("unused")
     public void setup(File configFolder, String configName) {
 
         file = new File(configFolder, configName + ".yml");
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                boolean created = file.createNewFile();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -28,6 +29,7 @@ public class Config {
         return config;
     }
 
+    @SuppressWarnings("unused")
     public void saveConfig() {
         try {
             config.save(file);
