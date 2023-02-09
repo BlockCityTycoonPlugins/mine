@@ -2,7 +2,7 @@ name: BlockCityTycoonMine
 version: '${project.version}'
 main: me.darkmun.blockcitytycoonmine.BlockCityTycoonMine
 authors: [ Darkmun ]
-depend: [ProtocolLib, PacketWrapper, Vault]
+depend: [ProtocolLib, PacketWrapper, Vault, BlockCityTycoonEvents]
 commands:
   stonespawnchance:
     description: Изменяет шанс спавна камней

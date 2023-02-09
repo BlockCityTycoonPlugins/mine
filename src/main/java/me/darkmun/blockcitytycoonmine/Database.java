@@ -18,7 +18,6 @@ public class Database {
             conProperties.put("user", "u95570_LRzuS0M9U7");
             conProperties.put("password", "uMGeUJbmt!oH^FYk^I1VSSTW");
             conProperties.put("autoReconnect", "true");
-            conProperties.put("maxReconnects", "15");
             String url = "jdbc:mysql://mysql2.joinserver.xyz:3306/s95570_BlockCityTycoon";
             connection = DriverManager.getConnection(url, conProperties);
         }

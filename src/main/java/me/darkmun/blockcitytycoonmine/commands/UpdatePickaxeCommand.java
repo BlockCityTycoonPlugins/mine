@@ -12,9 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class UpdatePickaxeCommand implements CommandExecutor {
-    Material[] pickaxes = new Material[] {Material.WOOD_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.GOLD_PICKAXE, Material.DIAMOND_PICKAXE};
+    List<Material> pickaxes = List.of(Material.WOOD_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.GOLD_PICKAXE, Material.DIAMOND_PICKAXE);
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender.hasPermission("bctmine.updatepickaxe")) {
@@ -40,7 +41,8 @@ public class UpdatePickaxeCommand implements CommandExecutor {
                         } else {
                             try {
                                 Material pickaxeMaterial = Material.valueOf(args[1].toUpperCase());
-                                if (Arrays.asList(pickaxes).contains(pickaxeMaterial)) {
+                                Bukkit.getLogger().info("find material");
+                                if (pickaxes.contains(pickaxeMaterial)) {
                                     item.setType(pickaxeMaterial);
                                 } else {
                                     sender.sendMessage(secondArgumentError());
@@ -51,7 +53,11 @@ public class UpdatePickaxeCommand implements CommandExecutor {
                             }
                         }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "В инвентаре игрока нет кирки");
+                        if (args[1].equals("wood_pickaxe")) {
+                            pl.getInventory().setItem(0, new ItemStack(Material.WOOD_PICKAXE));
+                        } else {
+                            sender.sendMessage(ChatColor.RED + "В инвентаре игрока нет кирки");
+                        }
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Игрока с таким ником сейчас нет на сервере");
@@ -67,7 +73,7 @@ public class UpdatePickaxeCommand implements CommandExecutor {
 
     private ItemStack getPickaxeFromInventory(PlayerInventory inventory) {
         return Arrays.stream(inventory.getContents()).filter(itemStack ->
-                Arrays.asList(pickaxes).contains(itemStack.getType())).findFirst().orElse(null);
+                itemStack != null && pickaxes.contains(itemStack.getType())).findFirst().orElse(null);
     }
 
     private String secondArgumentError() {

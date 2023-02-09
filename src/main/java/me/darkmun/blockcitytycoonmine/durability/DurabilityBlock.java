@@ -157,6 +157,12 @@ public class DurabilityBlock {
         player.getInventory().addItem(new ItemStack(fakeMaterial, 1));
     }
 
+    public Material giveMelted(Player player) {
+        ItemStack melted = this.convertToMelted();
+        player.getInventory().addItem(melted);
+        return melted.getType();
+    }
+
     private void setValueFromMaterial(Material material) {
         if (BlockCityTycoonMine.getPlugin().getConfig().contains("value-of-blocks." + material.toString().toLowerCase())) {
             value = BlockCityTycoonMine.getPlugin().getConfig().getDouble("value-of-blocks." + material.toString().toLowerCase());
@@ -174,6 +180,29 @@ public class DurabilityBlock {
             maxDurability = BlockCityTycoonMine.getPlugin().getConfig().getInt("durability-of-blocks." + material.toString().toLowerCase());
         }
         else maxDurability = BlockCityTycoonMine.getPlugin().getConfig().getInt("durability-of-blocks.default");
+    }
+
+    private ItemStack convertToMelted() {
+        switch (fakeMaterial) {
+            case IRON_ORE:
+                return new ItemStack(Material.IRON_INGOT);
+            case IRON_BLOCK:
+                return new ItemStack(Material.IRON_INGOT, 9);
+            case GOLD_ORE:
+                return new ItemStack(Material.GOLD_INGOT);
+            case GOLD_BLOCK:
+                return new ItemStack(Material.GOLD_INGOT, 9);
+            case DIAMOND_ORE:
+                return new ItemStack(Material.DIAMOND);
+            case DIAMOND_BLOCK:
+                return new ItemStack(Material.DIAMOND, 9);
+            case EMERALD_ORE:
+                return new ItemStack(Material.EMERALD);
+            case EMERALD_BLOCK:
+                return new ItemStack(Material.EMERALD, 9);
+            default:
+                throw new RuntimeException("Melting block can't be melted");
+        }
     }
 
     public double getValue() {

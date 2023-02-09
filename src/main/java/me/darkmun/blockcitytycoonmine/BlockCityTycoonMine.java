@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public final class BlockCityTycoonMine extends JavaPlugin implements CommandExecutor, Listener {
     private static BlockCityTycoonMine plugin;
-    private static final Plugin BCTEvents = Bukkit.getServer().getPluginManager().getPlugin("BlockCityTycoonEvents");
+    private static final Plugin BCTEvents = Bukkit.getPluginManager().getPlugin("BlockCityTycoonEvents");
     private static final Config upgradesConfig = new Config();
     private static final Config playersUpgradesConfig = new Config();
     private static final Config playerEventsDataConfig = new Config();

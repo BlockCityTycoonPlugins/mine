@@ -21,7 +21,7 @@ public class RandomMaterial {
 
             for (int i = 0; i < chances.length; i++) { // Ищем элемент, которому принадлежит этот индекс
                 index -= chances[i];
-                if(index <= 0) {
+                if(index < 0) {
                     return Material.valueOf(strings[i].toUpperCase()); // Получаем из названия в конфиге материал
                 }
             }

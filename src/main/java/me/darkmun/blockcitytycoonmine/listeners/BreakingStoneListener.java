@@ -72,9 +72,17 @@ public class BreakingStoneListener implements Listener {
                         if (itemInMainHand.getEnchantmentLevel(Enchantment.SILK_TOUCH) == 1) { //если есть шелковое касание, то блок выпадает
                             Material durabilityBlockMaterial = durabilityBlock.getMaterial();
                             if (durabilityBlockMaterial != Material.STONE && durabilityBlockMaterial != Material.COAL_ORE && durabilityBlockMaterial != Material.COAL_BLOCK) {
-                                durabilityBlock.giveToPlayer(pl);
-                                if (!pl.hasPermission("deluxemenus." + durabilityBlockMaterial + "_32")) {
-                                    BlockCityTycoonMine.permission.playerAdd(null, pl, "deluxemenus." + durabilityBlockMaterial + "_32");
+                                if (pl.hasPermission("bctglobal.donate.automelting")) { //если есть донат на автопереплавку
+                                    Material receivedMeltedMaterial = durabilityBlock.giveMelted(pl);
+                                    if (!pl.hasPermission("deluxemenus." + receivedMeltedMaterial + "_1")) {
+                                        BlockCityTycoonMine.permission.playerAdd(null, pl, "deluxemenus." + receivedMeltedMaterial + "_1");
+                                        BlockCityTycoonMine.permission.playerAdd(null, pl, "deluxemenus." + receivedMeltedMaterial + "BUY_4");
+                                    }
+                                } else {
+                                    durabilityBlock.giveToPlayer(pl);
+                                    if (!pl.hasPermission("deluxemenus." + durabilityBlockMaterial + "_32")) {
+                                        BlockCityTycoonMine.permission.playerAdd(null, pl, "deluxemenus." + durabilityBlockMaterial + "_32");
+                                    }
                                 }
                             }
                         }
