@@ -7,6 +7,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.darkmun.blockcitytycoonmine.auxiliary_classes.ChunkAndBlockWorker;
+import me.darkmun.blockcitytycoonmine.commands.ReloadCommand;
 import me.darkmun.blockcitytycoonmine.commands.StoneSpawnChanceCommand;
 import me.darkmun.blockcitytycoonmine.commands.UpdatePickaxeCommand;
 import me.darkmun.blockcitytycoonmine.durability.DurabilityBlock;
@@ -65,6 +66,7 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
             getServer().getPluginManager().registerEvents(new BreakingStoneListener(), this);
             getServer().getPluginManager().registerEvents(new JoinListener(), this);
 
+            getCommand("bctmine").setExecutor(new ReloadCommand());
             getCommand("stonespawnchance").setExecutor(new StoneSpawnChanceCommand());
             getCommand("updatepickaxe").setExecutor(new UpdatePickaxeCommand());
 

@@ -4,6 +4,8 @@ main: me.darkmun.blockcitytycoonmine.BlockCityTycoonMine
 authors: [ Darkmun ]
 depend: [ProtocolLib, PacketWrapper, Vault, BlockCityTycoonEvents]
 commands:
+  bctmine:
+    description: Для перезагрузки конфигов
   stonespawnchance:
     description: Изменяет шанс спавна камней
   updatepickaxe:
