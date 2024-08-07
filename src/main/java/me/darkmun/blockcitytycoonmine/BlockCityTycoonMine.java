@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public final class BlockCityTycoonMine extends JavaPlugin implements CommandExecutor, Listener {
     private static BlockCityTycoonMine plugin;
@@ -59,7 +60,7 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
             try {
                 database.initializeDatabase();
             } catch (SQLException e) {
-                throw new RuntimeException("Косяк с БД", e);
+                Bukkit.getLogger().log(Level.SEVERE, "Косяк с БД", e);
             }
 
             hookToVault();
@@ -143,9 +144,9 @@ public final class BlockCityTycoonMine extends JavaPlugin implements CommandExec
             UUID plUUID = offlinePlayer.getUniqueId();
             List<DurabilityBlock> blocks = ChunkAndBlockWorker.getDurabilityBlocks(plUUID);
             if (blocks != null) {
-                if (database.readDurabilityBlocks(plUUID).isEmpty())
-                    database.createDurabilityBlocks(plUUID, blocks);
-                else database.updateDurabilityBlocks(plUUID, blocks);
+                //if (database.readDurabilityBlocks(plUUID).isEmpty())
+                database.createOrUpdateDurabilityBlocks(plUUID, blocks);
+                //else database.updateDurabilityBlocks(plUUID, blocks);
             }
         }
     }

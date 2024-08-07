@@ -61,8 +61,8 @@ public class ChunkAndBlockWorker {
     public static void createChunkWithDurabilityBlocks(Player player) throws SQLException {
         createDurabilityBlocks(player);
         Chunk chunk = copyChunkTo(((CraftPlayer)player).getHandle().world.getChunkAt(STONE_MINE_CHUNK_X, STONE_MINE_CHUNK_Z), ((CraftWorld) player.getWorld()).getHandle(), STONE_MINE_CHUNK_X, STONE_MINE_CHUNK_Z);
+        addDurabilityBlocksToPlayerChunk(player, chunk);
         playersChunk.put(player.getUniqueId(), chunk);
-        addDurabilityBlocksToPlayerChunk(player);
     }
 
     private static void createDurabilityBlocks(Player pl) throws SQLException {
@@ -75,7 +75,7 @@ public class ChunkAndBlockWorker {
                     Block block = pl.getWorld().getBlockAt(i, j, k);
                     DurabilityBlock durBlock = new DurabilityBlock(
                             block,
-                            durBlockData.isEmpty() ? Material.STONE : durBlockData.get(entID),
+                            durBlockData.getOrDefault(entID, Material.STONE),
                             entID);
                     blocks.add(durBlock);
                     entID--;
@@ -86,7 +86,7 @@ public class ChunkAndBlockWorker {
     }
 
     @SuppressWarnings("deprecation")
-    private static void addDurabilityBlocksToPlayerChunk(Player pl) {
+    private static void addDurabilityBlocksToPlayerChunk(Player pl, Chunk chunk) {
         for (int i = STONE_MINE_LOW_X; i <= STONE_MINE_HIGH_X; i++) {
             for (int j = STONE_MINE_LOW_Y; j <= STONE_MINE_HIGH_Y; j++) {
                 for (int k = STONE_MINE_HIGH_Z; k >= STONE_MINE_LOW_Z; k--) {
@@ -95,12 +95,12 @@ public class ChunkAndBlockWorker {
                     int finalK = k;
                     DurabilityBlock durabilityBlock = Objects.requireNonNull(playersDurabilityBlocks.get(pl.getUniqueId()).stream().filter(durBlock ->
                             durBlock.getBlock().getX() == finalI && durBlock.getBlock().getY() == finalJ && durBlock.getBlock().getZ() == finalK).findAny().orElse(null));
-                    int id = durabilityBlock.getMaterial().getId();
+                    int durBlockId = durabilityBlock.getMaterial().getId();
 
                     int x = getXInChunk(i);
                     int y = getYInChunk(j);
                     int z = getZInChunk(k);
-                    playersChunk.get(pl.getUniqueId()).getSections()[2].setType(x,y,z, net.minecraft.server.v1_12_R1.Block.getById(id).getBlockData());
+                    chunk.getSections()[2].setType(x,y,z, net.minecraft.server.v1_12_R1.Block.getById(durBlockId).getBlockData());
                 }
             }
         }

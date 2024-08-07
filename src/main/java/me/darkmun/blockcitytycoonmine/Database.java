@@ -1,6 +1,7 @@
 package me.darkmun.blockcitytycoonmine;
 
 import me.darkmun.blockcitytycoonmine.durability.DurabilityBlock;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.sql.*;
@@ -8,18 +9,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class Database {
     private Connection connection = null;
+    private int keepAlive = 0;
 
     public Connection getConnection() throws SQLException {
-        if (connection == null) {
+        if (connection == null || connection.isClosed()) {
+            Bukkit.getScheduler().cancelTask(keepAlive);
             java.util.Properties conProperties = new java.util.Properties();
             conProperties.put("user", "u95570_LRzuS0M9U7");
             conProperties.put("password", "uMGeUJbmt!oH^FYk^I1VSSTW");
             conProperties.put("autoReconnect", "true");
             String url = "jdbc:mysql://mysql2.joinserver.xyz:3306/s95570_BlockCityTycoon";
             connection = DriverManager.getConnection(url, conProperties);
+            keepAlive = Bukkit.getScheduler().runTaskTimerAsynchronously(BlockCityTycoonMine.getPlugin(), () -> {
+                try (PreparedStatement ps = connection.prepareStatement("SELECT 1 FROM mine_data")) {
+                    ps.executeQuery();
+                } catch (SQLException ex) {
+                    Bukkit.getLogger().log(Level.SEVERE, "Keep alive failed", ex);
+                    ex.printStackTrace();
+                }
+            }, 0, 72000).getTaskId();
         }
         return connection;
     }
@@ -41,13 +53,16 @@ public class Database {
         }
     }
 
-    public void createDurabilityBlocks(UUID plUUID, List<DurabilityBlock> durabilityBlocks) throws SQLException {
-        PreparedStatement statement = getConnection().prepareStatement("INSERT INTO mine_data(UUID, blockId, material) VALUES (?, ?, ?)");
+    public void createOrUpdateDurabilityBlocks(UUID plUUID, List<DurabilityBlock> durabilityBlocks) throws SQLException {
+        PreparedStatement statement = getConnection().prepareStatement("INSERT INTO mine_data(UUID, blockId, material) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE material = ?");
         for (DurabilityBlock block : durabilityBlocks) {
-            statement.setString(1, plUUID.toString());
-            statement.setInt(2, block.getID());
-            statement.setString(3, block.getMaterial().toString());
-            statement.executeUpdate();
+            if (block.getMaterial() != Material.STONE) {
+                statement.setString(1, plUUID.toString());
+                statement.setInt(2, block.getID());
+                statement.setString(3, block.getMaterial().toString());
+                statement.setString(4, block.getMaterial().toString());
+                statement.executeUpdate();
+            }
         }
         statement.close();
     }
@@ -71,14 +86,16 @@ public class Database {
         return durBlockData;
     }
 
-    public void updateDurabilityBlocks(UUID plUUID, List<DurabilityBlock> durabilityBlocks) throws SQLException {
+    /*public void updateDurabilityBlocks(UUID plUUID, List<DurabilityBlock> durabilityBlocks) throws SQLException {
         PreparedStatement statement = getConnection().prepareStatement("UPDATE mine_data SET material = ? WHERE UUID = ? AND blockId = ?");
         for (DurabilityBlock block : durabilityBlocks) {
-            statement.setString(1, block.getMaterial().toString());
-            statement.setString(2, plUUID.toString());
-            statement.setInt(3, block.getID());
-            statement.executeUpdate();
+            if (block.getMaterial() != Material.STONE) {
+                statement.setString(1, block.getMaterial().toString());
+                statement.setString(2, plUUID.toString());
+                statement.setInt(3, block.getID());
+                statement.executeUpdate();
+            }
         }
         statement.close();
-    }
+    }*/
 }
